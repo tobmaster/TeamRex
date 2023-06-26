@@ -85,6 +85,9 @@
                 return;
             }
             sendVote(finalDirection);
+            setTimeout(() => { // set back
+                sendVote('static');
+            }, 1000);
             feedback.toggleClass('out', false);
             feedback.innerHTML = finalDirection;
             setTimeout(() => {
