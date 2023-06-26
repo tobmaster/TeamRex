@@ -85,9 +85,9 @@
                 return;
             }
             sendVote(finalDirection);
-            container.toggleClass('out', false);
-            container.innerHTML = finalDirection;
-            container.toggleClass('out', true);
+            feedback.toggleClass('out', false);
+            feedback.innerHTML = finalDirection;
+            feedback.toggleClass('out', true);
         }
 
         function sendVote(vote) {
