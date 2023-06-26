@@ -87,7 +87,9 @@
             sendVote(finalDirection);
             feedback.toggleClass('out', false);
             feedback.innerHTML = finalDirection;
-            feedback.toggleClass('out', true);
+            setTimeout(() => {
+                feedback.toggleClass('out', true);
+            }, 0);
         }
 
         function sendVote(vote) {
