@@ -81,7 +81,7 @@
                     finalDirection = 'down';
                 }
             }
-            if (finalDirection === 'down') {
+            if (finalDirection === 'down' || finalDirection === 'static') {
                 return;
             }
             sendVote(finalDirection);
