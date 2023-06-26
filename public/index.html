@@ -68,7 +68,7 @@
             const accelpercentage = (10 + parseFloat(accelerationZ)) / 20 * 100;
             const direction = (accelpercentage > 60 ? 'up' : (accelpercentage < 40 ? 'down' : '-'))
             history.unshift(direction);
-            history = history.slice(0, 100);
+            history = history.slice(0, 20);
 
             const upIndex = history.indexOf('up');
             const downIndex = history.indexOf('down');
