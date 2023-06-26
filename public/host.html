@@ -1,0 +1,19 @@
+<!-- host.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Host</title>
+</head>
+<body>
+  <h1>Host</h1>
+  <script>
+    const socket = new WebSocket(`wss://${document.location.host}/`);
+    socket.onopen = () => {
+      socket.send('master');
+      console.log('Connected to server as master');
+    };
+  </script>
+</body>
+</html>

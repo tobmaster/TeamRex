@@ -1,0 +1,60 @@
+<!-- voter.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voter</title>
+</head>
+<body>
+  <h1>Voter</h1>
+  <p>Your client ID: <span id="clientId"></span></p>
+  <form id="voteForm">
+    <label>
+      <input type="radio" name="vote" value="up">
+      Up
+    </label>
+    <label>
+      <input type="radio" name="vote" value="down">
+      Down
+    </label>
+    <button type="submit">Vote</button>
+  </form>
+  <script>
+    const socket = new WebSocket(`wss://${document.location.host}/`);
+    socket.onopen = () => {
+      socket.send('voter');
+      console.log('Connected to server as voter');
+    };
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      console.log('Received vote:', message);
+    };
+
+    const voteForm = document.getElementById('voteForm');
+    const clientIdSpan = document.getElementById('clientId');
+
+    voteForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const selectedVote = document.querySelector('input[name="vote"]:checked');
+      if (selectedVote) {
+        const vote = selectedVote.value;
+        socket.send(vote);
+        console.log('Sent vote:', vote);
+      }
+    });
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      console.log('Received vote:', message);
+    };
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      clientIdSpan.textContent = message.clientId;
+      console.log('Received client ID:', message.clientId);
+    };
+  </script>
+</body>
+</html>
