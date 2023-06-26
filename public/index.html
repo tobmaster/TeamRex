@@ -53,33 +53,25 @@
         };
 
         socket.onmessage = (event) => {
-            const message = JSON.parse(event.data);
+            const input = JSON.parse(event.data);
+            console.log('Received message:', input.message);
         };
 
-        socket.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            console.log('Received vote:', message);
-        };
-
-        socket.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            console.log('Received client ID:', message.clientId);
-        };
-
-        let zhistory = [];
+        let history = [];
 
         function handleDeviceMotion(event) {
+            console.log('motion', event);
             //const acceleration = event.accelerationIncludingGravity;
             const acceleration = event.acceleration;
             const accelerationZ = acceleration.z.toPrecision(1);
 
             const accelpercentage = (10 + parseFloat(accelerationZ)) / 20 * 100;
             const direction = (accelpercentage > 60 ? 'up' : (accelpercentage < 40 ? 'down' : '-'))
-            zhistory.unshift(direction);
-            zhistory = zhistory.slice(0, 100);
+            history.unshift(direction);
+            history = history.slice(0, 100);
 
-            const upIndex = zhistory.indexOf('up');
-            const downIndex = zhistory.indexOf('down');
+            const upIndex = history.indexOf('up');
+            const downIndex = history.indexOf('down');
 
             finalDirection = 'static';
             if (upIndex > -1 && downIndex > -1) {
