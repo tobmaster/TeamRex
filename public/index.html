@@ -2,59 +2,106 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Voter</title>
+    <meta charset="UTF-8">
+    <title>Voter</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            margin-bottom: 0.5em;
+            text-align: center;
+        }
+
+        .fade {
+            transition: opacity 0.5s ease-in;
+            opacity: 1;
+        }
+
+        .out {
+            opacity: 0;
+        }
+
+        #feedback {
+            font-size: 10rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>Voter</h1>
-  <p>Your client ID: <span id="clientId"></span></p>
-  <form id="voteForm">
-    <label>
-      <input type="radio" name="vote" value="up">
-      Up
-    </label>
-    <label>
-      <input type="radio" name="vote" value="down">
-      Down
-    </label>
-    <button type="submit">Vote</button>
-  </form>
-  <script>
-    const socket = new WebSocket(`wss://${document.location.host}/`);
-    socket.onopen = () => {
-      socket.send('voter');
-      console.log('Connected to server as voter');
-    };
 
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      console.log('Received vote:', message);
-    };
+    <h1>Welcome to Team-REX 🦖</h1>
+    <div id="feedback" class="fade"></div>
 
-    const voteForm = document.getElementById('voteForm');
-    const clientIdSpan = document.getElementById('clientId');
+    <script>
+        const socket = new WebSocket(`ws://${document.location.host}/`);
+        const feedback = document.getElementById('feedback');
 
-    voteForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const selectedVote = document.querySelector('input[name="vote"]:checked');
-      if (selectedVote) {
-        const vote = selectedVote.value;
-        socket.send(vote);
-        console.log('Sent vote:', vote);
-      }
-    });
+        socket.onopen = () => {
+            socket.send(JSON.stringify({ id: "sys", message: 'voter' }));
+            console.log('Connected to server as voter');
+        };
 
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      console.log('Received vote:', message);
-    };
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+        };
 
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      clientIdSpan.textContent = message.clientId;
-      console.log('Received client ID:', message.clientId);
-    };
-  </script>
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            console.log('Received vote:', message);
+        };
+
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            console.log('Received client ID:', message.clientId);
+        };
+
+        let zhistory = [];
+
+        function handleDeviceMotion(event) {
+            //const acceleration = event.accelerationIncludingGravity;
+            const acceleration = event.acceleration;
+            const accelerationZ = acceleration.z.toPrecision(1);
+
+            const accelpercentage = (10 + parseFloat(accelerationZ)) / 20 * 100;
+            const direction = (accelpercentage > 60 ? 'up' : (accelpercentage < 40 ? 'down' : '-'))
+            zhistory.unshift(direction);
+            zhistory = zhistory.slice(0, 100);
+
+            const upIndex = zhistory.indexOf('up');
+            const downIndex = zhistory.indexOf('down');
+
+            finalDirection = 'static';
+            if (upIndex > -1 && downIndex > -1) {
+                if (downIndex > upIndex) {
+                    finalDirection = 'up';
+                } else {
+                    finalDirection = 'down';
+                }
+            }
+            sendVote(finalDirection);
+            container.toggleClass('out', false);
+            container.innerHTML = finalDirection;
+            container.toggleClass('out', true);
+        }
+
+        function sendVote(vote) {
+            socket.send(JSON.stringify({ id: "vote", message: vote }));
+            console.log('Sent vote:', vote);
+        }
+
+        window.addEventListener('devicemotion', handleDeviceMotion);
+    </script>
 </body>
+
 </html>

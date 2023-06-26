@@ -2,18 +2,24 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Host</title>
 </head>
+
 <body>
   <h1>Host</h1>
   <script>
-    const socket = new WebSocket(`wss://${document.location.host}/`);
+    const socket = new WebSocket(`ws://${document.location.host}/`);
     socket.onopen = () => {
-      socket.send('master');
+      socket.send(JSON.stringify({ id: "sys", message: "host" }));
       console.log('Connected to server as master');
+    };
+    socket.onmessage = (event) => {
+      console.log('Received message:', event.data);
     };
   </script>
 </body>
+
 </html>
