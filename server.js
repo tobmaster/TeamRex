@@ -48,7 +48,7 @@ wss.on('connection', (ws) => {
       }
       clientList.set(clientId, ws);
       console.log(`Voter ${clientId} connected`);
-      ws.send(`Your client ID: ${clientId}`);
+      ws.send(JSON.stringify({ id: 'welcome', message: `Your client ID: ${clientId}` }));
       host.send(JSON.stringify({ id: "client-register", clientId }));
     } else if (request.message === 'up' || request.message === 'down') {
       // Forward valid vote to the master
