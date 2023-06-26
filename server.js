@@ -41,38 +41,25 @@ wss.on('connection', (ws) => {
       console.log(`Host connected`);
     } else if (request.message === 'voter') {
       const clientId = generateClientId();
-      const host = clientList.get('host');
-      if (!host) {
-        console.log('Host not connected');
-        return;
-      }
       clientList.set(clientId, ws);
       console.log(`Voter ${clientId} connected`);
       ws.send(JSON.stringify({ id: 'welcome', message: `Your client ID: ${clientId}` }));
-      host.send(JSON.stringify({ id: "client-register", clientId }));
-    } else if (request.message === 'up' || request.message === 'down') {
-      // Forward valid vote to the master
       const host = clientList.get('host');
       if (!host) {
         console.log('Host not connected');
         return;
       }
+      host.send(JSON.stringify({ id: "client-register", clientId }));
+    } else if (request.message === 'up' || request.message === 'down') {
+      // Forward valid vote to the host
       const clientId = getClientIdByConnection(ws);
-      host.send(JSON.stringify({ id: "vote", clientId, message: request.message }));
       console.log(`Received vote from ${clientId}: ${request.message}`);
-
-      /*
-        const clientId = getClientIdByConnection(ws);
-        if (clientId) {
-          const vote = { clientId, vote: request.message };
-          clientList.forEach((client) => {
-            if (client !== ws) {
-              client.send(JSON.stringify(vote));
-            }
-          });
-          console.log(`Received vote from ${clientId}: ${request.message}`);
-        }
-      */
+      const host = clientList.get('host');
+      if (!host) {
+        console.log('Host not connected');
+        return;
+      }
+      host.send(JSON.stringify({ id: "vote", clientId, message: request.message }));
     }
   });
 
@@ -85,7 +72,6 @@ wss.on('connection', (ws) => {
     }
     host.send(JSON.stringify({ id: "client-unregister", clientId }));
     console.log(`${clientId} disconnected`);
-    // Remove the client from the clients Map
     clientList.delete(clientId);
   });
 });
