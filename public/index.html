@@ -81,9 +81,9 @@
                     finalDirection = 'down';
                 }
             }
-            if (finalDirection === 'static') {
+            /*if (finalDirection === 'static') {
                 return;
-            }
+            }*/
             sendVote(finalDirection);
             feedback.toggleClass('out', false);
             feedback.innerHTML = finalDirection;

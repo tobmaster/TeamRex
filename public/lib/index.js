@@ -1,6 +1,6 @@
 import DinoGame from './game/DinoGame.js'
 
-const game = new DinoGame(600, 150)
+const game = new DinoGame(600, 250)
 const isTouchDevice =
   'ontouchstart' in window ||
   navigator.maxTouchPoints > 0 ||
@@ -12,18 +12,74 @@ socket.onopen = () => {
   console.log('Connected to server as master');
 };
 
+let gamerVotes = {
+};
+
 socket.onmessage = (event) => {
   console.log('Received message:', event.data);
-  const vote = JSON.parse(event.data);
-  if (vote.message === 'up') {
+
+  const serverEvent = JSON.parse(event.data);
+
+  switch (serverEvent.id) {
+    case 'client-register':
+      gamerVotes[serverEvent.clientId] = 'static';
+      break;
+    case 'client-unregister':
+      try {
+        delete gamerVotes[serverEvent.clientId];
+      } catch (e) {
+        console.log(e);
+      }
+      break;
+    case 'vote':
+      gamerVotes[serverEvent.clientId] = serverEvent.message;
+      break;
+  }
+  const direction = elaborateVotes();
+  act(direction);
+};
+
+function elaborateVotes() {
+  if (Object.keys(gamerVotes).length === 0) {
+    return 'static';
+  }
+
+  // calculate persecentage of votes for up, down
+  let up = 0;
+  let down = 0;
+  for (const [key, value] of Object.entries(gamerVotes)) {
+    switch (value) {
+      case 'up':
+        up++;
+        break;
+      case 'down':
+        down++;
+        break;
+    }
+  }
+
+  const upPercent = up / Object.keys(gamerVotes).length * 100;
+  const downPercent = down / Object.keys(gamerVotes).length * 100;
+
+  if (upPercent > 60) {
+    return 'up';
+  } else if (downPercent > 60) {
+    return 'down';
+  }
+
+  return 'static';
+}
+
+function act(direction) {
+  if (direction === 'up') {
     game.onInput('jump');
-  } else if (vote.message === 'down') {
+  } else if (direction === 'down') {
     game.onInput('duck');
     setTimeout(() => {
       game.onInput('stop-duck');
     }, 1000);
   }
-};
+}
 
 if (isTouchDevice) {
   document.addEventListener('touchstart', ({ touches }) => {

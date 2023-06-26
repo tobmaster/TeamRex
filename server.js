@@ -50,7 +50,7 @@ wss.on('connection', (ws) => {
         return;
       }
       host.send(JSON.stringify({ id: "client-register", clientId }));
-    } else if (request.message === 'up' || request.message === 'down') {
+    } else if (request.message === 'up' || request.message === 'down' || request.message === 'static') {
       // Forward valid vote to the host
       const clientId = getClientIdByConnection(ws);
       console.log(`Received vote from ${clientId}: ${request.message}`);

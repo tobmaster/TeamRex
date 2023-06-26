@@ -31,14 +31,14 @@ export default class DinoGame extends GameRunner {
      * px: pixels
      */
     this.defaultSettings = {
-      bgSpeed: 8, // ppf
+      bgSpeed: 5, // ppf
       birdSpeed: 7.2, // ppf
-      birdSpawnRate: 240, // fpa
+      birdSpawnRate: 340, // fpa
       birdWingsRate: 15, // fpa
-      cactiSpawnRate: 50, // fpa
+      cactiSpawnRate: 80, // fpa
       cloudSpawnRate: 200, // fpa
       cloudSpeed: 2, // ppf
-      dinoGravity: 0.5, // ppf
+      dinoGravity: 0.4, // ppf
       dinoGroundOffset: 4, // px
       dinoLegsRate: 6, // fpa
       dinoLift: 10, // ppf
