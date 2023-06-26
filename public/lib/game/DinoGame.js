@@ -33,6 +33,7 @@ export default class DinoGame extends GameRunner {
     this.defaultSettings = {
       bgSpeed: 5, // ppf
       birdSpeed: 7.2, // ppf
+      //birdSpawnRate: 340, // fpa
       birdSpawnRate: 340, // fpa
       birdWingsRate: 15, // fpa
       cactiSpawnRate: 80, // fpa
@@ -118,7 +119,7 @@ export default class DinoGame extends GameRunner {
       this.drawCacti()
 
       if (state.level > 3) {
-        this.drawBirds()
+        //this.drawBirds()
       }
 
       if (state.dino.hits([state.cacti[0], state.birds[0]])) {
