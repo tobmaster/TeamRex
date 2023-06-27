@@ -4,7 +4,7 @@
 
 <a href="https://chrisdothtml.github.io/chrome-dino" target="_blank"><img width="636" src="public/assets/preview.png" alt="chrome-dino"></a>
 
-Chris Deacy made a nice clone of the chrome dino game.
+Chris Deacy (https://github.com/chrisdothtml) made a nice clone of the chrome dino game.
 
 I took his source and extended it into a fun little party game.
 
