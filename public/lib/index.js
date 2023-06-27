@@ -10,7 +10,7 @@ const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
 const socket = new WebSocket(`${wsProtocol}//${document.location.host}/`);
 socket.onopen = () => {
   socket.send(JSON.stringify({ id: "sys", message: "host" }));
-  console.log('Connected to server as master');
+  renderGameStats();
 };
 
 let gamerVotes = {
@@ -39,6 +39,20 @@ socket.onmessage = (event) => {
   const direction = elaborateVotes();
   act(direction);
 };
+
+function renderGameStats() {
+  const stats = document.querySelector('#gamestats > span');
+  stats.innerHTML = '';
+  const results = Object.values(gamerVotes).reduce((acc, value) => {
+    acc.players++;
+    acc[value]++;
+    return acc;
+  }, { players: 0, up: 0 });
+  if (results.players !== 0) {
+    results.upPercent = results.up / results.players * 100;
+  }
+  stats.innerHTML = ` PLAYERS: <strong>${results.players}</strong>, UP: <strong>${results.up} | ${results.upPercent || 0}%</strong>`;
+}
 
 function elaborateVotes() {
   if (Object.keys(gamerVotes).length === 0) {
