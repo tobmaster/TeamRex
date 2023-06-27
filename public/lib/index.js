@@ -36,6 +36,7 @@ socket.onmessage = (event) => {
       gamerVotes[serverEvent.clientId] = serverEvent.message;
       break;
   }
+  renderGameStats();
   const direction = elaborateVotes();
   act(direction);
 };
@@ -43,6 +44,7 @@ socket.onmessage = (event) => {
 function renderGameStats() {
   const stats = document.querySelector('#gamestats > span');
   stats.innerHTML = '';
+  console.log
   const results = Object.values(gamerVotes).reduce((acc, value) => {
     acc.players++;
     acc[value]++;
