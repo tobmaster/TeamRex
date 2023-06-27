@@ -62,9 +62,9 @@ function elaborateVotes() {
   const upPercent = up / Object.keys(gamerVotes).length * 100;
   const downPercent = down / Object.keys(gamerVotes).length * 100;
 
-  if (upPercent > 60) {
+  if (upPercent > 70) {
     return 'up';
-  } else if (downPercent > 60) {
+  } else if (downPercent > 70) {
     return 'down';
   }
 
