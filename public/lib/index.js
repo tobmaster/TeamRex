@@ -7,7 +7,7 @@ const isTouchDevice =
   navigator.msMaxTouchPoints > 0
 
 const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-const socket = new WebSocket(`${wsProtocol}://${document.location.host}/`);
+const socket = new WebSocket(`${wsProtocol}//${document.location.host}/`);
 socket.onopen = () => {
   socket.send(JSON.stringify({ id: "sys", message: "host" }));
   console.log('Connected to server as master');
