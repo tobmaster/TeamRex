@@ -82,7 +82,15 @@
         const jumpSFX = new Howl({
             src: ['./babyjump.mp3']
         });
-        document.getElementById('start').addEventListener('click', () => {
+        document.getElementById('start').addEventListener('click', async () => {
+            if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                const permissionState = await DeviceMotionEvent.requestPermission()
+                if (permissionState !== 'granted') {
+                    alert('Spielverderber!');
+                    return;
+                }
+            }
+
             titleSFX.play();
             document.getElementById('start').style.display = 'none';
             const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
