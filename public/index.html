@@ -76,13 +76,14 @@
     <div id="feedback" class="fade"></div>
 
     <script>
-        const titleSFX = new Howl({
-            src: ['./title.mp3']
-        });
-        const jumpSFX = new Howl({
-            src: ['./babyjump.mp3']
-        });
         document.getElementById('start').addEventListener('click', async () => {
+            const titleSFX = new Howl({
+                src: ['./title.mp3']
+            });
+            const jumpSFX = new Howl({
+                src: ['./babyjump.mp3']
+            });
+
             if (typeof DeviceMotionEvent.requestPermission === 'function') {
                 const permissionState = await DeviceMotionEvent.requestPermission()
                 if (permissionState !== 'granted') {
