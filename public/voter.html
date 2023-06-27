@@ -23,7 +23,8 @@
     <button type="submit">Vote</button>
   </form>
   <script>
-    const socket = new WebSocket(`ws://${document.location.host}/`);
+    const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const socket = new WebSocket(`${wsProtocol}://${document.location.host}/`);
     socket.onopen = () => {
       socket.send(JSON.stringify({ id: "sys", message: 'voter' }));
       console.log('Connected to server as voter');

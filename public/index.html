@@ -85,8 +85,8 @@
         document.getElementById('start').addEventListener('click', () => {
             titleSFX.play();
             document.getElementById('start').style.display = 'none';
-
-            const socket = new WebSocket(`ws://${document.location.host}/`);
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const socket = new WebSocket(`${$wsProtocol}://${document.location.host}/`);
             const feedback = document.getElementById('feedback');
 
             socket.onopen = () => {
