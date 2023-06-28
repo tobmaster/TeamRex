@@ -70,8 +70,8 @@
 
     <h1>Welcome to</h1>
     <img src="./TeamREX.svg" alt="Team-REX" id="logo" />
+    <div id="feedback" class="fade">Unmute your phone and click:</div>
     <button id="start">READY!</button>
-    <div id="feedback" class="fade"></div>
 
     <script>
         document.getElementById('start').addEventListener('click', async () => {
@@ -90,15 +90,18 @@
                 }
             }
 
-            titleSFX.play();
             document.getElementById('start').style.display = 'none';
             const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
             const socket = new WebSocket(`${wsProtocol}//${document.location.host}/`);
             const feedback = document.getElementById('feedback');
 
+            feedback.innerHTML = '<h1>Connecting...</h1>';
+
             socket.onopen = () => {
                 socket.send(JSON.stringify({ id: "sys", message: 'voter' }));
                 console.log('Connected to server as voter');
+                feedback.innerHTML = '';
+                titleSFX.play();
             };
 
             socket.onmessage = (event) => {
@@ -139,7 +142,7 @@
                     sendVote('static');
                 }, 1500);
                 feedback.classList.toggle('out', false);
-                feedback.innerHTML = finalDirection;
+                feedback.innerHTML = '<h1>' + finalDirection + '</h1>';
                 setTimeout(() => {
                     feedback.classList.toggle('out', true);
                 }, 0);
